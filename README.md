@@ -157,6 +157,7 @@ users:
 
 organizations:
   - name: Acme Corp
+    id: org_01EXAMPLEPINNED # optional; generated if omitted — pin it to match your real WorkOS org id
     domains:
       - domain: acme.com
         state: verified
@@ -531,6 +532,7 @@ users:
 
 organizations:
   - name: Acme Corp
+    id: org_01EXAMPLEPINNED # optional; pin to match what your real WorkOS environment emits
     external_id: acme_corp_123
     domains:
       - domain: acme.com

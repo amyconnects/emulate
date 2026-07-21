@@ -92,6 +92,13 @@ export function validateSeedConfig(config: WorkOSSeedConfig): ConfigValidationRe
             value: org.name,
           });
         }
+        if (org.id !== undefined && (typeof org.id !== 'string' || org.id.length === 0)) {
+          errors.push({
+            path: `organizations[${index}].id`,
+            message: 'id must be a non-empty string if provided',
+            value: org.id,
+          });
+        }
         if (org.domains) {
           if (!Array.isArray(org.domains)) {
             errors.push({
@@ -179,6 +186,21 @@ export function validateSeedConfig(config: WorkOSSeedConfig): ConfigValidationRe
           });
         }
         seenOrgNames.add(org.name);
+      });
+
+      // A pinned id is the primary key in the in-memory store; duplicates would
+      // silently overwrite the earlier organization.
+      const seenOrgIds = new Set<string>();
+      config.organizations.forEach((org, index) => {
+        if (!org.id || typeof org.id !== 'string') return;
+        if (seenOrgIds.has(org.id)) {
+          errors.push({
+            path: `organizations[${index}].id`,
+            message: 'id must be unique across organizations',
+            value: org.id,
+          });
+        }
+        seenOrgIds.add(org.id);
       });
     }
   }

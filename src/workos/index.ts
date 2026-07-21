@@ -69,6 +69,12 @@ export { getWorkOSStore, type WorkOSStore } from './store.js';
 export * from './entities.js';
 
 export interface WorkOSSeedOrganization {
+  /**
+   * Pinned organization id (e.g. `org_01ABC…`). Generated if omitted.
+   * Pin it to match what your real WorkOS environment emits, so an application
+   * database that already references that org id lines up with the emulator.
+   */
+  id?: string;
   name: string;
   external_id?: string;
   metadata?: Record<string, string>;
@@ -256,6 +262,7 @@ export function seedFromConfig(store: Store, _baseUrl: string, config: WorkOSSee
   if (config.organizations) {
     for (const orgConfig of config.organizations) {
       const org = ws.organizations.insert({
+        id: orgConfig.id,
         object: 'organization',
         name: orgConfig.name,
         external_id: orgConfig.external_id ?? null,
